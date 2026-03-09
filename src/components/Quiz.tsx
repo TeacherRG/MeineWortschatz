@@ -48,14 +48,14 @@ export const Quiz: React.FC<QuizProps> = ({ words, onFinish, onCorrectAnswer }) 
       setScore(score + 1);
       onCorrectAnswer(currentWord.id);
     }
+  };
 
-    setTimeout(() => {
-      if (currentIndex < words.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-      } else {
-        setShowResult(true);
-      }
-    }, 1500);
+  const handleNext = () => {
+    if (currentIndex < words.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setShowResult(true);
+    }
   };
 
   if (showResult) {
@@ -119,7 +119,7 @@ export const Quiz: React.FC<QuizProps> = ({ words, onFinish, onCorrectAnswer }) 
         </h2>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-4 mb-8">
         {options.map((option, idx) => (
           <button
             key={idx}
@@ -144,6 +144,47 @@ export const Quiz: React.FC<QuizProps> = ({ words, onFinish, onCorrectAnswer }) 
           </button>
         ))}
       </div>
+
+      <AnimatePresence>
+        {selectedOption && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col gap-6"
+          >
+            <div className={`p-6 rounded-2xl flex items-start gap-4 ${
+              isCorrect ? 'bg-emerald-50 text-emerald-800 border border-emerald-100' : 'bg-rose-50 text-rose-800 border border-rose-100'
+            }`}>
+              <div className={`mt-1 p-1 rounded-full ${isCorrect ? 'bg-emerald-200' : 'bg-rose-200'}`}>
+                {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
+              </div>
+              <div>
+                <p className="font-bold mb-1">
+                  {isCorrect ? 'Правильно!' : 'Не совсем так...'}
+                </p>
+                {!isCorrect && (
+                  <p className="text-sm opacity-90">
+                    Правильный ответ: <span className="font-bold underline">{currentWord.translation}</span>
+                  </p>
+                )}
+                {currentWord.example && (
+                  <p className="mt-2 text-sm italic opacity-80">
+                    {currentWord.example}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <button
+              onClick={handleNext}
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-brand-900 text-white font-bold hover:bg-brand-800 transition-all shadow-lg group"
+            >
+              Дальше
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

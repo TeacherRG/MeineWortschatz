@@ -14,4 +14,19 @@ export interface WordSet {
   words: Word[];
 }
 
-export type AppMode = 'sets' | 'cards' | 'list' | 'quiz' | 'poems';
+export type AppMode = 'sets' | 'cards' | 'list' | 'quiz' | 'poems' | 'stats';
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  requirement: number;
+  unlockedAt?: string;
+}
+
+export interface UserStats {
+  points: number;
+  level: number;
+  achievements: string[]; // IDs of unlocked achievements
+}

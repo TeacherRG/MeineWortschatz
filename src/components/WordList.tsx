@@ -78,7 +78,8 @@ export const WordList: React.FC<WordListProps> = ({ words, learnedWords, onToggl
                   <h3 className="text-lg font-medium text-brand-900">{word.german}</h3>
                   <button 
                     onClick={() => speak(word.german)}
-                    className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-brand-50 text-brand-400 transition-all"
+                    className="p-2 rounded-xl bg-brand-50 text-brand-600 hover:bg-brand-100 hover:text-brand-900 transition-all flex items-center justify-center"
+                    title="Прослушать произношение"
                   >
                     <Volume2 className="w-4 h-4" />
                   </button>

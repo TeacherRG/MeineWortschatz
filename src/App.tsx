@@ -9,20 +9,33 @@ import {
   BrainCircuit,
   ArrowLeft,
   Plus,
-  Sparkles
+  Sparkles,
+  Trophy
 } from 'lucide-react';
 import { INITIAL_SETS } from './data/vocabulary';
-import { AppMode, WordSet } from './types';
+import { AppMode, WordSet, Achievement } from './types';
 import { Flashcards } from './components/Flashcards';
 import { WordList } from './components/WordList';
 import { Quiz } from './components/Quiz';
 import { Poems } from './components/Poems';
+import { Stats } from './components/Stats';
 import { VOCABULARY_POEMS } from './data/poems';
+
+const ACHIEVEMENTS: Achievement[] = [
+  { id: 'novice', title: 'Новичок', description: 'Выучено 10 слов', icon: '🌱', requirement: 10 },
+  { id: 'student', title: 'Ученик', description: 'Выучено 50 слов', icon: '📖', requirement: 50 },
+  { id: 'master', title: 'Магистр слов', description: 'Выучено 200 слов', icon: '🎓', requirement: 200 },
+  { id: 'expert', title: 'Эксперт', description: 'Выучено 500 слов', icon: '🔥', requirement: 500 },
+];
 
 export default function App() {
   const [mode, setMode] = useState<AppMode>('sets');
   const [selectedSet, setSelectedSet] = useState<WordSet | null>(null);
   const [learnedWords, setLearnedWords] = useState<Set<string>>(new Set());
+  const [points, setPoints] = useState(0);
+  const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([]);
+
+  const level = Math.floor(points / 1000) + 1;
 
   // Load progress from localStorage on mount
   React.useEffect(() => {
@@ -37,18 +50,58 @@ export default function App() {
         console.error('Failed to load progress', e);
       }
     }
+
+    const savedStats = localStorage.getItem('wortschatz_stats');
+    if (savedStats) {
+      try {
+        const parsed = JSON.parse(savedStats);
+        if (parsed.points) setPoints(parsed.points);
+        if (parsed.achievements) setUnlockedAchievements(parsed.achievements);
+      } catch (e) {
+        console.error('Failed to load stats', e);
+      }
+    }
   }, []);
 
   // Save progress to localStorage whenever it changes
   React.useEffect(() => {
     localStorage.setItem('wortschatz_progress', JSON.stringify(Array.from(learnedWords)));
-  }, [learnedWords]);
+    
+    // Check for achievements
+    const learnedCount = learnedWords.size;
+    const newAchievements = ACHIEVEMENTS
+      .filter(a => learnedCount >= a.requirement && !unlockedAchievements.includes(a.id))
+      .map(a => a.id);
+    
+    if (newAchievements.length > 0) {
+      setUnlockedAchievements(prev => [...prev, ...newAchievements]);
+    }
+  }, [learnedWords, unlockedAchievements]);
+
+  React.useEffect(() => {
+    localStorage.setItem('wortschatz_stats', JSON.stringify({
+      points,
+      achievements: unlockedAchievements
+    }));
+  }, [points, unlockedAchievements]);
+
+  const addPoints = (amount: number) => {
+    setPoints(prev => prev + amount);
+  };
 
   const toggleLearned = (wordId: string, learned: boolean) => {
     setLearnedWords(prev => {
       const next = new Set(prev);
-      if (learned) next.add(wordId);
-      else next.delete(wordId);
+      if (learned) {
+        if (!next.has(wordId)) {
+          next.add(wordId);
+          addPoints(100);
+        }
+      } else {
+        if (next.has(wordId)) {
+          next.delete(wordId);
+        }
+      }
       return next;
     });
   };
@@ -165,6 +218,15 @@ export default function App() {
                 <Sparkles className="w-4 h-4" />
                 <span className="hidden sm:inline">Стихи</span>
               </button>
+              <button
+                onClick={() => setMode('stats')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  mode === 'stats' ? 'bg-white shadow-sm text-brand-900' : 'text-brand-500 hover:text-brand-700'
+                }`}
+              >
+                <Trophy className="w-4 h-4" />
+                <span className="hidden sm:inline">Прогресс</span>
+              </button>
             </div>
           </div>
         </nav>
@@ -196,10 +258,22 @@ export default function App() {
               <Quiz 
                 words={selectedSet.words} 
                 onFinish={() => setMode('sets')}
-                onCorrectAnswer={(id) => toggleLearned(id, true)}
+                onCorrectAnswer={(id) => {
+                  toggleLearned(id, true);
+                  addPoints(50);
+                }}
               />
             )}
             {mode === 'poems' && <Poems poems={VOCABULARY_POEMS} />}
+            {mode === 'stats' && (
+              <Stats 
+                points={points}
+                level={level}
+                learnedCount={learnedWords.size}
+                achievements={ACHIEVEMENTS}
+                unlockedAchievementIds={unlockedAchievements}
+              />
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
