@@ -10,7 +10,8 @@ import {
   ArrowLeft,
   Plus,
   Sparkles,
-  Trophy
+  Trophy,
+  Gamepad2
 } from 'lucide-react';
 import { INITIAL_SETS } from './data/vocabulary';
 import { AppMode, WordSet, Achievement } from './types';
@@ -19,6 +20,7 @@ import { WordList } from './components/WordList';
 import { Quiz } from './components/Quiz';
 import { Poems } from './components/Poems';
 import { Stats } from './components/Stats';
+import { SentenceBuilder } from './components/SentenceBuilder';
 import { VOCABULARY_POEMS } from './data/poems';
 
 const ACHIEVEMENTS: Achievement[] = [
@@ -210,6 +212,15 @@ export default function App() {
                 <span className="hidden sm:inline">Квиз</span>
               </button>
               <button
+                onClick={() => setMode('game')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  mode === 'game' ? 'bg-white shadow-sm text-brand-900' : 'text-brand-500 hover:text-brand-700'
+                }`}
+              >
+                <Gamepad2 className="w-4 h-4" />
+                <span className="hidden sm:inline">Игра</span>
+              </button>
+              <button
                 onClick={() => setMode('poems')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   mode === 'poems' ? 'bg-white shadow-sm text-brand-900' : 'text-brand-500 hover:text-brand-700'
@@ -261,6 +272,16 @@ export default function App() {
                 onCorrectAnswer={(id) => {
                   toggleLearned(id, true);
                   addPoints(50);
+                }}
+              />
+            )}
+            {mode === 'game' && (
+              <SentenceBuilder 
+                words={selectedSet.words}
+                onFinish={() => setMode('sets')}
+                onCorrect={(id) => {
+                  toggleLearned(id, true);
+                  addPoints(75);
                 }}
               />
             )}
