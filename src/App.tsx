@@ -11,7 +11,11 @@ import {
   Plus,
   Sparkles,
   Trophy,
-  Gamepad2
+  Gamepad2,
+  Search,
+  Filter,
+  SortAsc,
+  SlidersHorizontal
 } from 'lucide-react';
 import { INITIAL_SETS } from './data/vocabulary';
 import { AppMode, WordSet, Achievement } from './types';
@@ -36,8 +40,23 @@ export default function App() {
   const [learnedWords, setLearnedWords] = useState<Set<string>>(new Set());
   const [points, setPoints] = useState(0);
   const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [minWords, setMinWords] = useState(0);
+  const [sortBy, setSortBy] = useState<'title' | 'count'>('title');
 
   const level = Math.floor(points / 1000) + 1;
+
+  const filteredSets = INITIAL_SETS
+    .filter(set => 
+      (set.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+       set.description.toLowerCase().includes(searchQuery.toLowerCase())) &&
+      set.words.length >= minWords
+    )
+    .sort((a, b) => {
+      if (sortBy === 'title') return a.title.localeCompare(b.title);
+      if (sortBy === 'count') return b.words.length - a.words.length;
+      return 0;
+    });
 
   // Load progress from localStorage on mount
   React.useEffect(() => {
@@ -125,8 +144,51 @@ export default function App() {
             </p>
           </header>
 
+          <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-3xl border border-brand-100 shadow-sm">
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-400" />
+              <input 
+                type="text"
+                placeholder="Поиск наборов..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-brand-50 border-none rounded-2xl focus:ring-2 focus:ring-brand-900 transition-all outline-none text-brand-900"
+              />
+            </div>
+            
+            <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+              <div className="flex items-center gap-2 bg-brand-50 px-4 py-2 rounded-2xl border border-brand-100">
+                <SlidersHorizontal className="w-4 h-4 text-brand-400" />
+                <span className="text-sm font-medium text-brand-600">Мин. слов:</span>
+                <select 
+                  value={minWords}
+                  onChange={(e) => setMinWords(Number(e.target.value))}
+                  className="bg-transparent border-none focus:ring-0 text-sm font-bold text-brand-900 outline-none"
+                >
+                  <option value={0}>Все</option>
+                  <option value={10}>10+</option>
+                  <option value={20}>20+</option>
+                  <option value={50}>50+</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2 bg-brand-50 px-4 py-2 rounded-2xl border border-brand-100">
+                <SortAsc className="w-4 h-4 text-brand-400" />
+                <span className="text-sm font-medium text-brand-600">Сортировка:</span>
+                <select 
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as 'title' | 'count')}
+                  className="bg-transparent border-none focus:ring-0 text-sm font-bold text-brand-900 outline-none"
+                >
+                  <option value="title">По названию</option>
+                  <option value="count">По количеству слов</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {INITIAL_SETS.map((set) => (
+            {filteredSets.map((set) => (
               <motion.div
                 key={set.id}
                 whileHover={{ y: -5 }}
