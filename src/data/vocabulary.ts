@@ -7,6 +7,7 @@ import { lektion3 } from './lessons/lektion3';
 import { starkeVerben } from './lessons/starke_verben';
 import { modalVerben } from './lessons/modal_verben';
 import { reflexiveVerben } from './lessons/reflexive_verben';
+import { verbenMitPraepositionen } from './lessons/verben_mit_praepositionen';
 
 export const INITIAL_SETS: WordSet[] = [
   lektion1,
@@ -16,5 +17,6 @@ export const INITIAL_SETS: WordSet[] = [
   lektion3,
   starkeVerben,
   modalVerben,
-  reflexiveVerben
+  reflexiveVerben,
+  verbenMitPraepositionen
 ];
