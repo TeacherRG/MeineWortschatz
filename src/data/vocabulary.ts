@@ -8,6 +8,8 @@ import { starkeVerben } from './lessons/starke_verben';
 import { modalVerben } from './lessons/modal_verben';
 import { reflexiveVerben } from './lessons/reflexive_verben';
 import { verbenMitPraepositionen } from './lessons/verben_mit_praepositionen';
+import { inDerStadt } from './lessons/in_der_stadt';
+import { umwelt } from './lessons/umwelt';
 
 export const INITIAL_SETS: WordSet[] = [
   lektion1,
@@ -18,5 +20,7 @@ export const INITIAL_SETS: WordSet[] = [
   starkeVerben,
   modalVerben,
   reflexiveVerben,
-  verbenMitPraepositionen
+  verbenMitPraepositionen,
+  inDerStadt,
+  umwelt
 ];

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Volume2, CheckCircle2 } from 'lucide-react';
+import { Search, Volume2, CheckCircle2, Filter } from 'lucide-react';
 import { Word } from '../types';
 
 interface WordListProps {
@@ -40,26 +40,36 @@ export const WordList: React.FC<WordListProps> = ({ words, learnedWords, onToggl
             className="w-full pl-12 pr-4 py-3 bg-white border border-brand-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-900/10 transition-all"
           />
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
-          <button
-            onClick={() => setSelectedCategory(null)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
-              !selectedCategory ? 'bg-brand-900 text-white' : 'bg-white text-brand-600 border border-brand-200'
-            }`}
-          >
-            Все
-          </button>
-          {categories.map(cat => (
+        <div className="flex-1 w-full">
+          <div className="flex items-center gap-2 mb-2 ml-2">
+            <Filter className="w-4 h-4 text-brand-400" />
+            <span className="text-xs font-semibold text-brand-400 uppercase tracking-tighter">Фильтр по категориям</span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-4 md:pb-0 no-scrollbar">
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
-                selectedCategory === cat ? 'bg-brand-900 text-white' : 'bg-white text-brand-600 border border-brand-200'
+              onClick={() => setSelectedCategory(null)}
+              className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all border ${
+                !selectedCategory 
+                  ? 'bg-brand-900 text-white border-brand-900 shadow-sm' 
+                  : 'bg-white text-brand-600 border-brand-200 hover:border-brand-300'
               }`}
             >
-              {cat}
+              Все ({words.length})
             </button>
-          ))}
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all border ${
+                  selectedCategory === cat 
+                    ? 'bg-brand-900 text-white border-brand-900 shadow-sm' 
+                    : 'bg-white text-brand-600 border-brand-200 hover:border-brand-300'
+                }`}
+              >
+                {cat} ({words.filter(w => w.category === cat).length})
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
