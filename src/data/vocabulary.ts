@@ -10,6 +10,7 @@ import { reflexiveVerben } from './lessons/reflexive_verben';
 import { verbenMitPraepositionen } from './lessons/verben_mit_praepositionen';
 import { inDerStadt } from './lessons/in_der_stadt';
 import { umwelt } from './lessons/umwelt';
+import { blickInDieZukunft } from './lessons/blick_in_die_zukunft';
 
 export const INITIAL_SETS: WordSet[] = [
   lektion1,
@@ -22,5 +23,6 @@ export const INITIAL_SETS: WordSet[] = [
   reflexiveVerben,
   verbenMitPraepositionen,
   inDerStadt,
-  umwelt
+  umwelt,
+  blickInDieZukunft
 ];
