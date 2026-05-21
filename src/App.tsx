@@ -25,6 +25,7 @@ import { Poems } from './components/Poems';
 import { Stats } from './components/Stats';
 import { SentenceBuilder } from './components/SentenceBuilder';
 import { VOCABULARY_POEMS } from './data/poems';
+import { AudioHabitPlayer } from './components/AudioHabitPlayer';
 
 const ACHIEVEMENTS: Achievement[] = [
   { id: 'novice', title: 'Новичок', description: 'Выучено 10 слов', icon: '🌱', requirement: 10 },
@@ -127,6 +128,18 @@ export default function App() {
   };
 
   const renderContent = () => {
+    if (mode === 'habits') {
+      return (
+        <AudioHabitPlayer 
+          onBack={() => setMode('sets')}
+          onReward={(pts) => {
+            addPoints(pts);
+          }}
+          currentPoints={points}
+        />
+      );
+    }
+
     if (mode === 'sets') {
       return (
         <div className="max-w-6xl mx-auto p-6">
@@ -137,6 +150,30 @@ export default function App() {
               Выберите набор слов ниже, чтобы начать.
             </p>
           </header>
+
+          {/* Featured Audio Habit Feature Banner */}
+          <div className="mb-10 bg-gradient-to-br from-[#fff1f2] via-rose-50/40 to-[#f0fbf6] rounded-3xl p-8 text-slate-800 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-rose-100">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-rose-200/50 rounded-full filter blur-3xl opacity-30 transform translate-x-20 -translate-y-20"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-100/60 rounded-full filter blur-3xl opacity-30 transform -translate-x-20 translate-y-20"></div>
+            
+            <div className="relative z-10 max-w-xl">
+              <span className="bg-rose-500/10 text-rose-600 text-xs font-extrabold tracking-widest uppercase px-3.5 py-1.5 rounded-full border border-rose-500/10">
+                ПОЛЕЗНЫЕ ПРИВЫЧКИ • YOUTUBE
+              </span>
+              <h2 className="text-3xl font-serif font-bold mt-4 mb-2 text-slate-900">Немецкий во время рутины 🪥</h2>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Слушайте обучающий плейлист YouTube постепенно во время чистки зубов (2 мин) или зарядки (5 мин). Красивый круговой таймер "растает", а плеер запомнит и возобновит музыку ровно там, где вы закончили!
+              </p>
+            </div>
+            <div className="relative z-10 shrink-0">
+              <button
+                onClick={() => setMode('habits')}
+                className="bg-[#f43f5e] hover:bg-[#e11d48] active:scale-95 text-white font-bold px-6 py-4 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer"
+              >
+                Начать прослушивание 🎧
+              </button>
+            </div>
+          </div>
 
           <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-end bg-white p-4 rounded-3xl border border-brand-100 shadow-sm">
             <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">

@@ -14,7 +14,7 @@ export interface WordSet {
   words: Word[];
 }
 
-export type AppMode = 'sets' | 'cards' | 'list' | 'quiz' | 'poems' | 'stats' | 'game';
+export type AppMode = 'sets' | 'cards' | 'list' | 'quiz' | 'poems' | 'stats' | 'game' | 'habits';
 
 export interface Achievement {
   id: string;
