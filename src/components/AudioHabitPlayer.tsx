@@ -222,7 +222,7 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
     if (!dragStartRef.current) return;
     const { y: startY, val, type } = dragStartRef.current;
     const diff = startY - clientY; // Drag up increases
-    const steps = Math.round(diff / 20); // 20px per step sensitivity
+    const steps = Math.round(diff / 10); // 10px per step sensitivity for smaller wheel height
     if (steps !== 0) {
       if (type === 'hours') {
         const newVal = (val + steps + 24 * 10) % 24;
@@ -234,7 +234,7 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
         const newVal = (val + steps + 60 * 10) % 60;
         setSeconds(newVal);
       }
-      dragStartRef.current.y = clientY - (diff % 20);
+      dragStartRef.current.y = clientY - (diff % 10);
     }
   };
 
@@ -693,13 +693,13 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-zinc-100 to-brand-50/20 text-slate-800 font-sans overflow-x-hidden antialiased flex flex-col justify-between pb-10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-zinc-100 to-brand-50/20 text-slate-800 font-sans overflow-x-hidden antialiased flex flex-col justify-between pb-3">
       
       {/* Primary Container Wrap */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 pt-4 flex flex-col flex-grow">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-3 pt-2.5 flex flex-col flex-grow">
         
         {/* Minimal header navbar */}
-        <div className="flex items-center justify-between py-3 border-b border-slate-200 mb-6 font-sans">
+        <div className="flex items-center justify-between py-2 border-b border-slate-200 mb-2 font-sans">
           <button 
             onClick={() => {
               if (viewState === 'player') {
@@ -729,22 +729,22 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
 
         {/* ----------------- PHASE 1: SETUP SCREEN ----------------- */}
         {viewState === 'setup' && (
-          <div className="flex flex-col flex-grow justify-around items-center max-w-xl mx-auto w-full my-auto py-4">
+          <div className="flex flex-col flex-grow justify-center items-center max-w-md mx-auto w-full my-auto py-1 gap-2">
             
             {/* Header Title replacing mock tab bar */}
-            <div className="flex flex-col items-center gap-1.5 mb-6 select-none text-center">
-              <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#f43f5e] bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/10">
+            <div className="flex flex-col items-center gap-0.5 select-none text-center mb-0.5">
+              <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#f43f5e] bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/10">
                 Режим Таймера
               </span>
-              <h2 className="text-xl font-bold tracking-tight text-slate-800 mt-1.5 font-sans">Таймер ухода • Немецкий язык</h2>
-              <p className="text-xs text-slate-500">Вращайте колесо мыши или перетаскивайте цифры вверх/вниз</p>
+              <h2 className="text-sm font-bold tracking-tight text-slate-800 mt-0.5 font-sans">Таймер ухода • Немецкий язык</h2>
+              <p className="text-[10px] text-slate-500">Вращайте колесо мыши или перетаскивайте цифры вверх/вниз</p>
             </div>
 
             {/* Drum Spinner Visual Area */}
-            <div className="flex items-center justify-center gap-6 select-none my-6 w-full relative">
+            <div className="flex items-center justify-center gap-3 select-none my-1 w-full relative">
               
               {/* Vertical center indicator borders */}
-              <div className="absolute inset-x-0 h-16 border-y border-slate-200 pointer-events-none top-1/2 -translate-y-1/2 bg-slate-500/5 z-0"></div>
+              <div className="absolute inset-x-0 h-9 border-y border-slate-200 pointer-events-none top-1/2 -translate-y-1/2 bg-slate-500/5 z-0"></div>
 
               {/* HOURS COLUMN */}
               <div 
@@ -767,24 +767,24 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
                   window.addEventListener('mousemove', onMouseMove);
                   window.addEventListener('mouseup', onMouseUp);
                 }}
-                className="flex flex-col items-center justify-center w-24 h-48 relative overflow-hidden text-center z-10 cursor-ns-resize"
+                className="flex flex-col items-center justify-center w-16 h-22 relative overflow-hidden text-center z-10 cursor-ns-resize"
               >
                 {/* Upper helper element */}
                 <div 
                   onClick={() => setHours(prev => (prev + 23) % 24)}
-                  className="text-slate-400 hover:text-slate-600 text-3xl font-light cursor-pointer transition-all py-1 select-none opacity-50 scale-90"
+                  className="text-slate-400 hover:text-slate-600 text-xs font-light cursor-pointer transition-all py-0 select-none opacity-50 scale-90"
                 >
                   {drumHours[0].toString().padStart(2, '0')}
                 </div>
                 {/* Active value */}
-                <div className="text-6xl font-extrabold text-[#f43f5e] py-2 select-none flex items-baseline justify-center gap-1.5 scale-100 transition-all duration-150">
+                <div className="text-2xl font-extrabold text-[#f43f5e] py-0.5 select-none flex items-baseline justify-center gap-0.5 scale-100 transition-all duration-150">
                   <span>{drumHours[1].toString().padStart(2, '0')}</span>
-                  <span className="text-xs font-bold text-slate-400 uppercase">ч</span>
+                  <span className="text-[9px] font-bold text-slate-400 uppercase">ч</span>
                 </div>
                 {/* Lower helper element */}
                 <div 
                   onClick={() => setHours(prev => (prev + 1) % 24)}
-                  className="text-slate-400 hover:text-slate-600 text-3xl font-light cursor-pointer transition-all py-1 select-none opacity-50 scale-90"
+                  className="text-slate-400 hover:text-slate-600 text-xs font-light cursor-pointer transition-all py-0 select-none opacity-50 scale-90"
                 >
                   {drumHours[2].toString().padStart(2, '0')}
                 </div>
@@ -811,24 +811,24 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
                   window.addEventListener('mousemove', onMouseMove);
                   window.addEventListener('mouseup', onMouseUp);
                 }}
-                className="flex flex-col items-center justify-center w-28 h-48 relative overflow-hidden text-center z-10 cursor-ns-resize"
+                className="flex flex-col items-center justify-center w-20 h-22 relative overflow-hidden text-center z-10 cursor-ns-resize"
               >
                 {/* Upper helper element */}
                 <div 
                   onClick={() => setMinutes(prev => (prev + 59) % 60)}
-                  className="text-slate-400 hover:text-slate-600 text-3xl font-light cursor-pointer transition-all py-1 select-none opacity-50 scale-90"
+                  className="text-slate-400 hover:text-slate-600 text-xs font-light cursor-pointer transition-all py-0 select-none opacity-50 scale-90"
                 >
                   {drumMinutes[0].toString().padStart(2, '0')}
                 </div>
                 {/* Active value */}
-                <div className="text-6xl font-extrabold text-[#f43f5e] py-2 select-none flex items-baseline justify-center gap-1.5 scale-100 transition-all duration-150">
+                <div className="text-2xl font-extrabold text-[#f43f5e] py-0.5 select-none flex items-baseline justify-center gap-0.5 scale-100 transition-all duration-150">
                   <span>{drumMinutes[1].toString().padStart(2, '0')}</span>
-                  <span className="text-xs font-bold text-slate-400 uppercase">мин</span>
+                  <span className="text-[9px] font-bold text-slate-400 uppercase">мин</span>
                 </div>
                 {/* Lower helper element */}
                 <div 
                   onClick={() => setMinutes(prev => (prev + 1) % 60)}
-                  className="text-slate-400 hover:text-slate-600 text-3xl font-light cursor-pointer transition-all py-1 select-none opacity-50 scale-90"
+                  className="text-slate-400 hover:text-slate-600 text-xs font-light cursor-pointer transition-all py-0 select-none opacity-50 scale-90"
                 >
                   {drumMinutes[2].toString().padStart(2, '0')}
                 </div>
@@ -855,24 +855,24 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
                   window.addEventListener('mousemove', onMouseMove);
                   window.addEventListener('mouseup', onMouseUp);
                 }}
-                className="flex flex-col items-center justify-center w-24 h-48 relative overflow-hidden text-center z-10 cursor-ns-resize"
+                className="flex flex-col items-center justify-center w-16 h-22 relative overflow-hidden text-center z-10 cursor-ns-resize"
               >
                 {/* Upper helper */}
                 <div 
                   onClick={() => setSeconds(prev => (prev + 59) % 60)}
-                  className="text-slate-400 hover:text-slate-600 text-3xl font-light cursor-pointer transition-all py-1 select-none opacity-50 scale-90"
+                  className="text-slate-400 hover:text-slate-600 text-xs font-light cursor-pointer transition-all py-0 select-none opacity-50 scale-90"
                 >
                   {drumSeconds[0].toString().padStart(2, '0')}
                 </div>
                 {/* Active value */}
-                <div className="text-6xl font-extrabold text-[#f43f5e] py-2 select-none flex items-baseline justify-center gap-1.5 scale-100 transition-all duration-150">
+                <div className="text-2xl font-extrabold text-[#f43f5e] py-0.5 select-none flex items-baseline justify-center gap-0.5 scale-100 transition-all duration-150">
                   <span>{drumSeconds[1].toString().padStart(2, '0')}</span>
-                  <span className="text-xs font-bold text-slate-400 uppercase">с</span>
+                  <span className="text-[9px] font-bold text-slate-400 uppercase">с</span>
                 </div>
                 {/* Lower helper */}
                 <div 
                   onClick={() => setSeconds(prev => (prev + 1) % 60)}
-                  className="text-slate-400 hover:text-slate-600 text-3xl font-light cursor-pointer transition-all py-1 select-none opacity-50 scale-90"
+                  className="text-slate-400 hover:text-slate-600 text-xs font-light cursor-pointer transition-all py-0 select-none opacity-50 scale-90"
                 >
                   {drumSeconds[2].toString().padStart(2, '0')}
                 </div>
@@ -881,22 +881,22 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
             </div>
 
             {/* Presets Row matching the circular buttons/presets */}
-            <div className="w-full mt-6 mb-10">
-              <div className="grid grid-cols-4 gap-4 justify-items-center">
+            <div className="w-full mt-1 mb-1.5">
+              <div className="grid grid-cols-4 gap-2 justify-items-center">
                 {presets.map((p) => {
                   const isActive = selectedPresetId === p.id;
                   return (
                     <div key={p.id} className="flex flex-col items-center">
                       <button
                         onClick={() => selectPreset(p)}
-                        className={`w-16 h-16 rounded-full flex flex-col items-center justify-center transition-all relative ${
+                        className={`w-10 h-10 rounded-full flex flex-col items-center justify-center transition-all relative ${
                           isActive 
-                            ? 'bg-rose-600 border-2 border-rose-400 shadow-lg text-white font-semibold' 
+                            ? 'bg-rose-600 border border-rose-400 shadow-md text-white font-semibold' 
                             : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 shadow-sm'
                         }`}
                       >
-                        <span className="text-xl -mt-1">{p.emoji}</span>
-                        <span className="text-[9px] font-mono mt-0.5 opacity-90">
+                        <span className="text-base -mt-0.5">{p.emoji}</span>
+                        <span className="text-[7.5px] font-mono mt-0.5 opacity-95">
                           {p.minutes.toString().padStart(2, '0')}:00
                         </span>
 
@@ -909,7 +909,7 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
                           </button>
                         )}
                       </button>
-                      <span className="text-[10px] text-slate-500 text-center mt-2 line-clamp-1 w-20">
+                      <span className="text-[9px] text-slate-500 text-center mt-1 line-clamp-1 w-16">
                         {p.titleRu}
                       </span>
                     </div>
@@ -920,39 +920,39 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
                 <div className="flex flex-col items-center">
                   <button
                     onClick={() => setShowAddCustomModal(true)}
-                    className="w-16 h-16 rounded-full bg-white border border-dashed border-slate-300 text-slate-400 flex items-center justify-center transition-all hover:bg-slate-50 hover:text-slate-600 hover:border-slate-400 shadow-sm"
+                    className="w-10 h-10 rounded-full bg-white border border-dashed border-slate-300 text-slate-400 flex items-center justify-center transition-all hover:bg-slate-50 hover:text-slate-600 hover:border-slate-400 shadow-sm"
                   >
-                    <Plus className="w-6 h-6" />
+                    <Plus className="w-4 h-4" />
                   </button>
-                  <span className="text-[10px] text-slate-400 mt-2">Свой</span>
+                  <span className="text-[9px] text-slate-400 mt-1">Свой</span>
                 </div>
               </div>
             </div>
 
             {/* Custom YouTube Source Section */}
-            <div className="w-full bg-white border border-slate-200/80 rounded-3xl p-5 mb-6 text-left shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Youtube className="w-4 h-4 text-rose-500 animate-pulse" />
-                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <div className="w-full bg-white border border-slate-200/80 rounded-2xl p-3 mb-1 text-left shadow-sm">
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-1.5">
+                  <Youtube className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+                  <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">
                     YouTube Источник 📺
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowSourceModal(true)}
-                  className="text-[11px] bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 active:scale-95 px-3 py-1.5 rounded-full border border-rose-500/20 font-semibold transition-all cursor-pointer"
+                  className="text-[9px] bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 active:scale-95 px-2 py-0.5 rounded-full border border-rose-500/20 font-semibold transition-all cursor-pointer"
                 >
                   Выбрать видео/плейлист
                 </button>
               </div>
 
-              <div className="bg-slate-50 border border-slate-150 p-3.5 rounded-2xl flex items-center justify-between gap-3">
+              <div className="bg-slate-50 border border-slate-150 p-2 rounded-xl flex items-center justify-between gap-3">
                 <div className="truncate">
                   <p className="text-xs font-semibold text-slate-800 truncate">
                     {mediaSource.name || 'По умолчанию: Описание картинок'}
                   </p>
-                  <p className="text-[10px] text-slate-400 font-mono mt-0.5 truncate">
+                  <p className="text-[9px] text-slate-400 font-mono mt-0.5 truncate">
                     {mediaSource.type === 'playlist' ? 'Плейлист ID: ' : 'Видео ID: '}{mediaSource.id}
                   </p>
                 </div>
@@ -966,7 +966,7 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
                       const savedIdx = parseInt(localStorage.getItem(`yt_progress_${defaultSrc.id}_index`) || '0', 10);
                       setPlaylistIndex(savedIdx);
                     }}
-                    className="text-[10px] text-slate-500 hover:text-rose-600 underline cursor-pointer shrink-0 transition-colors"
+                    className="text-[9px] text-slate-500 hover:text-rose-600 underline cursor-pointer shrink-0 transition-colors"
                   >
                     Сбросить
                   </button>
@@ -1158,7 +1158,7 @@ export function AudioHabitPlayer({ onBack, onReward, currentPoints }: AudioHabit
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleLaunch}
-              className="w-full bg-[#f43f5e] hover:bg-[#e11d48] text-white py-4 px-8 rounded-full font-bold text-lg tracking-wide shadow-xl active:bg-[#be123c] transition-all flex items-center justify-center gap-2 mt-4"
+              className="w-full bg-[#f43f5e] hover:bg-[#e11d48] text-white py-1.5 px-6 rounded-full font-bold text-sm tracking-wide shadow-md active:bg-[#be123c] transition-all flex items-center justify-center gap-2 mt-1"
             >
               Пуск
             </motion.button>
